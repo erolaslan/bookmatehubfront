@@ -10,4 +10,5 @@ export interface Book {
     title: string;
     author: string;
     userId: number;
+    status: "Active" | "Passive" | "Deleted";
 }

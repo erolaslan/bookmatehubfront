@@ -10,16 +10,13 @@ import { useNavigate } from "react-router-dom";
 const BookList: React.FC = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [open, setOpen] = useState(false);
-    const [editBook, setEditBook] = useState<Book | null>(null); // Güncelleme işlemi için seçilen kitap
-    const [statusFilter, setStatusFilter] = useState("Active"); // Varsayılan durum filtresi
+    const [editBook, setEditBook] = useState<Book | null>(null); 
+    const [statusFilter, setStatusFilter] = useState("Active"); 
     const navigate = useNavigate();
 
     const fetchBooks = async (status: string) => {
-        const token = localStorage.getItem("token");
         try {
-            const response = await apiClient.get(`/books?status=${status}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const response = await apiClient.get(`/books?status=${status}`);
             setBooks(response.data);
         } catch (error) {
             console.error("Error fetching books:", error);
@@ -37,24 +34,21 @@ const BookList: React.FC = () => {
     const handleClose = () => setOpen(false);
 
     const handleDelete = async (bookId: number) => {
-        const token = localStorage.getItem("token");
         try {
-            // Kitabı "Deleted" olarak güncelleme isteği gönder
             await apiClient.put(`/books/${bookId}/status`, "Deleted", {
                 headers: {
-                    Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
             });
-            fetchBooks(statusFilter); // Silme işleminden sonra mevcut duruma göre listeyi yenile
+            fetchBooks(statusFilter); 
         } catch (error) {
             console.error("Error updating book status to 'Deleted':", error);
         }
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("token"); // Token'ı silerek oturumu kapat
-        navigate("/"); // Giriş sayfasına yönlendir
+        localStorage.removeItem("token");
+        navigate("/");
     };
 
     return (

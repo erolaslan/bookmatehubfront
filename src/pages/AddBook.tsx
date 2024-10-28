@@ -24,25 +24,19 @@ const AddBook: React.FC<AddBookProps> = ({ onBookAdded, onClose, book }) => {
         if (book) {
             setTitle(book.title);
             setAuthor(book.author);
-            setStatus(book.status); // Gelen kitabın durumunu ayarla
+            setStatus(book.status);
         }
     }, [book]);
 
     const handleSave = async () => {
-        const token = localStorage.getItem("token");
-        const config = {
-            headers: { Authorization: `Bearer ${token}` },
-        };
         try {
             if (book) {
-                // Kitap güncelleme işlemi
-                await apiClient.put(`/books/${book.id}`, { title, author, status }, config);
+                await apiClient.put(`/books/${book.id}`, { title, author, status });
             } else {
-                // Yeni kitap ekleme işlemi
-                await apiClient.post("/books", { title, author, status }, config);
+                await apiClient.post("/books", { title, author, status });
             }
-            onBookAdded(); // Listeyi güncelle
-            onClose(); // Modal'ı kapat
+            onBookAdded();
+            onClose();
         } catch (error) {
             console.error("Error saving book:", error);
         }

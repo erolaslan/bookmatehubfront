@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Typography, CircularProgress, Stack } from "@mui/material";
 import { UserLogin } from "../types/auth";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import apiClient from "../utils/axiosInstance";
 
 const Login: React.FC = () => {
