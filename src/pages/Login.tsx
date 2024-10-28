@@ -3,6 +3,7 @@ import { Box, TextField, Button, Typography, CircularProgress, Stack } from "@mu
 import { UserLogin } from "../types/auth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import apiClient from "../utils/axiosInstance";
 
 const Login: React.FC = () => {
     const [formData, setFormData] = useState<UserLogin>({ username: "", password: "" });
@@ -15,7 +16,7 @@ const Login: React.FC = () => {
         setErrorMessage(null); // Hata mesajını sıfırla
         try {
             // Giriş isteğini yap ve token'ı al
-            const response = await axios.post("http://localhost:5172/api/auth/login", formData);
+            const response = await apiClient.post("/auth/login", formData);
 
             // Token'ı al ve localStorage'a kaydet
             const token = response.data.token;

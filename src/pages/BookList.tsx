@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, List, ListItem, Button, Modal, IconButton, Stack, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { Book } from "../types/auth";
-import axios from "axios";
+import apiClient from "../utils/axiosInstance";
 import AddBook from "./AddBook";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,10 +16,14 @@ const BookList: React.FC = () => {
 
     const fetchBooks = async (status: string) => {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`http://localhost:5172/api/books?status=${status}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        setBooks(response.data);
+        try {
+            const response = await apiClient.get(`/books?status=${status}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setBooks(response.data);
+        } catch (error) {
+            console.error("Error fetching books:", error);
+        }
     };
 
     useEffect(() => {
@@ -36,16 +40,12 @@ const BookList: React.FC = () => {
         const token = localStorage.getItem("token");
         try {
             // Kitabı "Deleted" olarak güncelleme isteği gönder
-            await axios.put(
-                `http://localhost:5172/api/books/${bookId}/status`,
-                "Deleted",
-                {
-                    headers: { 
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                }
-            );
+            await apiClient.put(`/books/${bookId}/status`, "Deleted", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+            });
             fetchBooks(statusFilter); // Silme işleminden sonra mevcut duruma göre listeyi yenile
         } catch (error) {
             console.error("Error updating book status to 'Deleted':", error);

@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Box, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
-import axios from "axios";
+import apiClient from "../utils/axiosInstance";
+
+interface Book {
+    id?: number;
+    title: string;
+    author: string;
+    status: string;
+}
 
 interface AddBookProps {
     onBookAdded: () => void;
@@ -23,21 +30,16 @@ const AddBook: React.FC<AddBookProps> = ({ onBookAdded, onClose, book }) => {
 
     const handleSave = async () => {
         const token = localStorage.getItem("token");
+        const config = {
+            headers: { Authorization: `Bearer ${token}` },
+        };
         try {
             if (book) {
                 // Kitap güncelleme işlemi
-                await axios.put(
-                    `http://localhost:5172/api/books/${book.id}`,
-                    { title, author, status },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
+                await apiClient.put(`/books/${book.id}`, { title, author, status }, config);
             } else {
                 // Yeni kitap ekleme işlemi
-                await axios.post(
-                    "http://localhost:5172/api/books",
-                    { title, author, status },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
+                await apiClient.post("/books", { title, author, status }, config);
             }
             onBookAdded(); // Listeyi güncelle
             onClose(); // Modal'ı kapat
