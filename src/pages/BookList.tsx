@@ -10,8 +10,8 @@ import { useNavigate } from "react-router-dom";
 const BookList: React.FC = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [open, setOpen] = useState(false);
-    const [editBook, setEditBook] = useState<Book | null>(null); 
-    const [statusFilter, setStatusFilter] = useState("Active"); 
+    const [editBook, setEditBook] = useState<Book | undefined>(); // `undefined` ile başlatıldı
+    const [statusFilter, setStatusFilter] = useState("Active");
     const navigate = useNavigate();
 
     const fetchBooks = async (status: string) => {
@@ -28,19 +28,19 @@ const BookList: React.FC = () => {
     }, [statusFilter]);
 
     const handleOpen = (book?: Book) => {
-        setEditBook(book || null);
+        setEditBook(book);
         setOpen(true);
     };
-    const handleClose = () => setOpen(false);
+
+    const handleClose = () => {
+        setOpen(false);
+        setEditBook(undefined); // Modal kapandığında düzenlenecek kitabı temizle
+    };
 
     const handleDelete = async (bookId: number) => {
         try {
-            await apiClient.put(`/books/${bookId}/status`, "Deleted", {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            });
-            fetchBooks(statusFilter); 
+            await apiClient.put(`/books/${bookId}/status`, { status: "Deleted" });
+            fetchBooks(statusFilter);
         } catch (error) {
             console.error("Error updating book status to 'Deleted':", error);
         }

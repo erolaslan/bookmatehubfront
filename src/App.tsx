@@ -10,7 +10,12 @@ const App: React.FC = () => (
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/books" element={<BookList />} />
-        <Route path="/books/create" element={<AddBook />} />
+        
+        {/* AddBook bileşeni için gerekli propsları ekleyin */}
+        <Route 
+            path="/books/create" 
+            element={<AddBook onBookAdded={() => {}} onClose={() => {}} />} 
+        />
     </Routes>
 );
 
