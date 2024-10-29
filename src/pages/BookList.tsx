@@ -44,7 +44,7 @@ const BookList: React.FC = () => {
     try {
         const response = await apiClient.put(`/books/${bookId}/status`, { status: "Deleted" });
 
-        if (response.status === 200 || response.status === 204) {
+        if (response.status === 204 || response.status === 200) {
             fetchBooks(statusFilter); // Başarılı güncelleme sonrası listeyi yeniden al
         } else {
             console.warn("Unexpected response status:", response.status);
@@ -53,6 +53,7 @@ const BookList: React.FC = () => {
         console.error("Error updating book status to 'Deleted':", error.response?.data || error.message);
     }
 };
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
