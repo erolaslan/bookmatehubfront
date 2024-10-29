@@ -44,7 +44,7 @@ const BookList: React.FC = () => {
     try {
         const response = await apiClient.put(
             `/books/${bookId}/status`,
-            { status: "Deleted" }, // JSON formatında gönderiyoruz
+            { }, // JSON formatında gönderiyoruz
             {
                 headers: {
                     'Content-Type': 'application/json', // JSON formatı belirtildi
