@@ -47,7 +47,7 @@ const BookList: React.FC = () => {
             { status: "Deleted" }, // JSON formatında gönderiyoruz
             {
                 headers: {
-                    'Content-Type': 'application/json', // JSON formatında gönderildiği belirtildi
+                    'Content-Type': 'application/json', // JSON formatı belirtildi
                 },
             }
         );
@@ -61,6 +61,7 @@ const BookList: React.FC = () => {
         console.error("Error updating book status to 'Deleted':", error.response?.data || error.message);
     }
 };
+
 
 
 
