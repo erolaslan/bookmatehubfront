@@ -55,8 +55,12 @@ const BookList: React.FC = () => {
 
   const handleDelete = async (bookId: number) => {
     try {
-      const response = await apiClient.get(`/Books/${bookId}/status`);
-
+      const response = await apiClient.get(`/Books/${bookId}/status`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`, // Token başlığı eklendi
+        },
+      });
+  
       if (response.status === 204 || response.status === 200) {
         fetchBooks(statusFilter); // Başarılı güncelleme sonrası listeyi yeniden al
       } else {
@@ -69,6 +73,7 @@ const BookList: React.FC = () => {
       );
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.removeItem("token");
