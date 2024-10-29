@@ -44,10 +44,10 @@ const BookList: React.FC = () => {
     try {
         const response = await apiClient.put(
             `/books/${bookId}/status`,
-            "Deleted", // Doğrudan Deleted gönderiyoruz, tırnaksız
+            { status: "Deleted" }, // JSON formatında gönderiyoruz
             {
                 headers: {
-                    'Content-Type': 'text/plain', // Beklenen format
+                    'Content-Type': 'application/json', // JSON formatında gönderildiği belirtildi
                 },
             }
         );
@@ -61,6 +61,7 @@ const BookList: React.FC = () => {
         console.error("Error updating book status to 'Deleted':", error.response?.data || error.message);
     }
 };
+
 
 
 
