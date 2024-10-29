@@ -42,12 +42,27 @@ const BookList: React.FC = () => {
 
   const handleDelete = async (bookId: number) => {
     try {
-      await apiClient.put(`/books/${bookId}/status`, { status: "Deleted" });
-      fetchBooks(statusFilter);
-    } catch (error) {
-      console.error("Error updating book status to 'Deleted':", error);
+        const response = await apiClient.put(
+            `/books/${bookId}/status`,
+            JSON.stringify({ status: "Deleted" }),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        if (response.status === 204) {
+            fetchBooks(statusFilter); // Güncel listeyi almak için yeniden çağır
+        } else {
+            console.warn("Unexpected response status:", response.status);
+        }
+    } catch (error: any) {
+        // Hata durumunda daha ayrıntılı bilgi göstermek için
+        console.error("Error updating book status to 'Deleted':", error.response?.data || error.message);
     }
-  };
+};
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
