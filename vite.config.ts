@@ -7,7 +7,6 @@ export default defineConfig({
   server: {
     port: 3000,               // Uygulamanın 3000 portunda çalışmasını sağlar
     host: true,               // Dış IP adreslerinden erişilebilir yapar
-    open: true,               // Uygulamayı başlattığınızda tarayıcıyı otomatik açar (isteğe bağlı)
     hmr: {
       protocol: 'wss',        // WebSocket üzerinden SSL kullanır
       host: 'bookmatehub.com' // Uygulamanın çalıştığı ana bilgisayar adı
