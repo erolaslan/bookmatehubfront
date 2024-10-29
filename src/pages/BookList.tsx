@@ -42,7 +42,15 @@ const BookList: React.FC = () => {
 
   const handleDelete = async (bookId: number) => {
     try {
-        const response = await apiClient.put(`/books/${bookId}/Deleted`, { status: "Deleted" });
+        const response = await apiClient.put(
+            `/books/${bookId}/status`,
+            "Deleted", // JSON yerine doğrudan dize olarak gönderiyoruz
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
 
         if (response.status === 204 || response.status === 200) {
             fetchBooks(statusFilter); // Başarılı güncelleme sonrası listeyi yeniden al
@@ -53,6 +61,7 @@ const BookList: React.FC = () => {
         console.error("Error updating book status to 'Deleted':", error.response?.data || error.message);
     }
 };
+
 
 
   const handleLogout = () => {
