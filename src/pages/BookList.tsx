@@ -42,15 +42,12 @@ const BookList: React.FC = () => {
 
   const handleDelete = async (bookId: number) => {
     try {
-        const response = await apiClient.put(
-            `/books/${bookId}/status`,
-            JSON.stringify({ status: "Deleted" }),
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
+        const response = await apiClient.delete(`/books/${bookId}/status`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: { status: "Deleted" }, // DELETE isteğinde veri göndermek için `data` kullanılır
+        });
 
         if (response.status === 204) {
             fetchBooks(statusFilter); // Güncel listeyi almak için yeniden çağır
@@ -59,10 +56,9 @@ const BookList: React.FC = () => {
         }
     } catch (error: any) {
         // Hata durumunda daha ayrıntılı bilgi göstermek için
-        console.error("Error updating book status to 'Deleted':", error.response?.data || error.message);
+        console.error("Error deleting book:", error.response?.data || error.message);
     }
 };
-
 
   const handleLogout = () => {
     localStorage.removeItem("token");
