@@ -42,7 +42,7 @@ const BookList: React.FC = () => {
 
   const handleDelete = async (bookId: number) => {
     try {
-        const response = await apiClient.put(`/books/${bookId}/status`, { status: "Deleted" });
+        const response = await apiClient.put(`/books/${bookId}/Deleted`, { status: "Deleted" });
 
         if (response.status === 204 || response.status === 200) {
             fetchBooks(statusFilter); // Başarılı güncelleme sonrası listeyi yeniden al
