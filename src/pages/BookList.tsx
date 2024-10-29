@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, List, ListItem, Button, Modal, IconButton, Stack, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  Button,
+  Modal,
+  IconButton,
+  Stack,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { Book } from "../types/auth";
 import apiClient from "../utils/axiosInstance";
 import AddBook from "./AddBook";
@@ -42,31 +55,20 @@ const BookList: React.FC = () => {
 
   const handleDelete = async (bookId: number) => {
     try {
-        const response = await apiClient.put(
-            `/books/${bookId}/status`,
-            { }, // JSON formatında gönderiyoruz
-            {
-                headers: {
-                    'Content-Type': 'application/json', // JSON formatı belirtildi
-                },
-            }
-        );
+      const response = await apiClient.get(`/books/delete?id=${bookId}`);
 
-        if (response.status === 204 || response.status === 200) {
-            fetchBooks(statusFilter); // Başarılı güncelleme sonrası listeyi yeniden al
-        } else {
-            console.warn("Unexpected response status:", response.status);
-        }
+      if (response.status === 204 || response.status === 200) {
+        fetchBooks(statusFilter); // Başarılı güncelleme sonrası listeyi yeniden al
+      } else {
+        console.warn("Unexpected response status:", response.status);
+      }
     } catch (error: any) {
-        console.error("Error updating book status to 'Deleted':", error.response?.data || error.message);
+      console.error(
+        "Error updating book status to 'Deleted':",
+        error.response?.data || error.message
+      );
     }
-};
-
-
-
-
-
-
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -75,7 +77,12 @@ const BookList: React.FC = () => {
 
   return (
     <Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
         <Typography variant="h4">Books</Typography>
         <Button variant="outlined" color="secondary" onClick={handleLogout}>
           Logout
@@ -94,7 +101,11 @@ const BookList: React.FC = () => {
             <MenuItem value="Deleted">Deleted</MenuItem>
           </Select>
         </FormControl>
-        <Button variant="contained" color="primary" onClick={() => handleOpen()}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleOpen()}
+        >
           Add Book
         </Button>
       </Stack>
@@ -111,14 +122,22 @@ const BookList: React.FC = () => {
             p: 4,
           }}
         >
-          <AddBook onBookAdded={() => fetchBooks(statusFilter)} onClose={handleClose} book={editBook} />
+          <AddBook
+            onBookAdded={() => fetchBooks(statusFilter)}
+            onClose={handleClose}
+            book={editBook}
+          />
         </Box>
       </Modal>
       <List>
         {books.map((book) => (
           <ListItem
             key={book.id}
-            sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
             <Typography>
               {book.title} - {book.author} ({book.status})
@@ -127,7 +146,10 @@ const BookList: React.FC = () => {
               <IconButton onClick={() => handleOpen(book)} color="primary">
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={() => handleDelete(book.id)} color="secondary">
+              <IconButton
+                onClick={() => handleDelete(book.id)}
+                color="secondary"
+              >
                 <DeleteIcon />
               </IconButton>
             </Box>
