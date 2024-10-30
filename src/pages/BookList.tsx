@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
-  Card,
-  CardContent,
-  CardActions,
+  List,
+  ListItem,
   Button,
   Modal,
   IconButton,
@@ -13,7 +12,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Grid,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { Book } from "../types/auth";
 import apiClient from "../utils/axiosInstance";
@@ -84,8 +84,18 @@ const BookList: React.FC = () => {
 
   return (
     <Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h4">Books</Typography>
+      <Stack
+        direction="column"
+        alignItems="flex-end"
+        spacing={2}
+        mb={2}
+      >
+        {/* Logout Button */}
+        <Button variant="outlined" color="secondary" onClick={handleLogout}>
+          Logout
+        </Button>
+
+        {/* Filter and Add Book Buttons */}
         <Stack direction="row" spacing={2} alignItems="center">
           <FormControl>
             <InputLabel>Status Filter</InputLabel>
@@ -99,44 +109,71 @@ const BookList: React.FC = () => {
               <MenuItem value="Deleted">Deleted</MenuItem>
             </Select>
           </FormControl>
-          <Button variant="contained" color="primary" onClick={() => handleOpen()}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleOpen()}
+          >
             Add Book
           </Button>
         </Stack>
       </Stack>
 
-      <Grid container spacing={3}>
+      <Modal open={open} onClose={handleClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <AddBook
+            onBookAdded={() => fetchBooks(statusFilter)}
+            onClose={handleClose}
+            book={editBook}
+          />
+        </Box>
+      </Modal>
+
+      {/* Book Cards */}
+      <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">
         {books.map((book) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={book.id}>
-            <Card variant="outlined" sx={{ height: "100%" }}>
-              <CardContent>
-                <Typography variant="h6" color="primary">
-                  {book.title}
-                </Typography>
-                <Typography variant="subtitle1" color="textSecondary">
-                  by {book.author}
-                </Typography>
+          <Card key={book.id} sx={{ width: 250, minWidth: 200, boxShadow: 3 }}>
+            <CardContent>
+              <Typography variant="h6" color="primary" gutterBottom>
+                {book.title}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                by {book.author}
+              </Typography>
+              <Typography variant="body2">
+                Status: {book.status}
+              </Typography>
+              {book.readingDate && (
                 <Typography variant="body2" color="textSecondary">
-                  Status: {book.status}
+                  Reading Date: {dayjs(book.readingDate).format("YYYY-MM-DD")}
                 </Typography>
-                {book.readingDate && (
-                  <Typography variant="body2" color="textSecondary">
-                    Reading Date: {dayjs(book.readingDate).format("YYYY-MM-DD")}
-                  </Typography>
-                )}
-              </CardContent>
-              <CardActions>
+              )}
+              <Box mt={2} display="flex" justifyContent="space-between">
                 <IconButton onClick={() => handleOpen(book)} color="primary">
                   <EditIcon />
                 </IconButton>
-                <IconButton onClick={() => handleDelete(book.id)} color="secondary">
+                <IconButton
+                  onClick={() => handleDelete(book.id)}
+                  color="secondary"
+                >
                   <DeleteIcon />
                 </IconButton>
-              </CardActions>
-            </Card>
-          </Grid>
+              </Box>
+            </CardContent>
+          </Card>
         ))}
-      </Grid>
+      </Box>
     </Box>
   );
 };
