@@ -19,6 +19,7 @@ import AddBook from "./AddBook";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs"; // Tarihi formatlamak için
 
 const BookList: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -57,10 +58,10 @@ const BookList: React.FC = () => {
     try {
       const response = await apiClient.get(`/Books/delete?id=${bookId}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`, // Token başlığı eklendi
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Token başlığı eklendi
         },
       });
-  
+
       if (response.status === 204 || response.status === 200) {
         fetchBooks(statusFilter); // Başarılı güncelleme sonrası listeyi yeniden al
       } else {
@@ -73,7 +74,6 @@ const BookList: React.FC = () => {
       );
     }
   };
-  
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -146,6 +146,13 @@ const BookList: React.FC = () => {
           >
             <Typography>
               {book.title} - {book.author} ({book.status})
+              {book.readingDate && (
+                <Typography variant="body2" color="textSecondary">
+                  {`Reading Date: ${dayjs(book.readingDate).format(
+                    "YYYY-MM-DD"
+                  )}`}
+                </Typography>
+              )}
             </Typography>
             <Box>
               <IconButton onClick={() => handleOpen(book)} color="primary">
