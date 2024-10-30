@@ -13,6 +13,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Grid,
 } from "@mui/material";
 import { Book } from "../types/auth";
 import apiClient from "../utils/axiosInstance";
@@ -83,106 +84,59 @@ const BookList: React.FC = () => {
 
   return (
     <Box>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h4">Books</Typography>
-        <Button variant="outlined" color="secondary" onClick={handleLogout}>
-          Logout
-        </Button>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <FormControl>
+            <InputLabel>Status Filter</InputLabel>
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              label="Status Filter"
+            >
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Passive">Passive</MenuItem>
+              <MenuItem value="Deleted">Deleted</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="contained" color="primary" onClick={() => handleOpen()}>
+            Add Book
+          </Button>
+        </Stack>
       </Stack>
-      <Stack direction="row" spacing={2} alignItems="center" mb={2}>
-        <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel>Status Filter</InputLabel>
-          <Select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            label="Status Filter"
-          >
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Passive">Passive</MenuItem>
-            <MenuItem value="Deleted">Deleted</MenuItem>
-          </Select>
-        </FormControl>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleOpen()}
-          sx={{ ml: "auto" }}
-        >
-          Add Book
-        </Button>
-      </Stack>
-      <Modal open={open} onClose={handleClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <AddBook
-            onBookAdded={() => fetchBooks(statusFilter)}
-            onClose={handleClose}
-            book={editBook}
-          />
-        </Box>
-      </Modal>
-      <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="start">
+
+      <Grid container spacing={3}>
         {books.map((book) => (
-          <Card
-            key={book.id}
-            sx={{
-              width: 300,
-              minHeight: 200,
-              mb: 2,
-              mr: 2,
-              bgcolor: "background.paper",
-              boxShadow: 3,
-              borderRadius: 2,
-              border: "1px solid #ccc",
-            }}
-          >
-            <CardContent>
-              <Typography variant="h6" color="primary">
-                {book.title}
-              </Typography>
-              <Typography variant="subtitle1" color="text.secondary">
-                by {book.author}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {`Status: ${book.status}`}
-              </Typography>
-              {book.readingDate && (
-                <Typography variant="body2" color="text.secondary">
-                  {`Reading Date: ${dayjs(book.readingDate).format(
-                    "YYYY-MM-DD"
-                  )}`}
+          <Grid item xs={12} sm={6} md={4} lg={3} key={book.id}>
+            <Card variant="outlined" sx={{ height: "100%" }}>
+              <CardContent>
+                <Typography variant="h6" color="primary">
+                  {book.title}
                 </Typography>
-              )}
-            </CardContent>
-            <CardActions>
-              <IconButton onClick={() => handleOpen(book)} color="primary">
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => handleDelete(book.id)}
-                color="secondary"
-              >
-                <DeleteIcon />
-              </IconButton>
-            </CardActions>
-          </Card>
+                <Typography variant="subtitle1" color="textSecondary">
+                  by {book.author}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Status: {book.status}
+                </Typography>
+                {book.readingDate && (
+                  <Typography variant="body2" color="textSecondary">
+                    Reading Date: {dayjs(book.readingDate).format("YYYY-MM-DD")}
+                  </Typography>
+                )}
+              </CardContent>
+              <CardActions>
+                <IconButton onClick={() => handleOpen(book)} color="primary">
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => handleDelete(book.id)} color="secondary">
+                  <DeleteIcon />
+                </IconButton>
+              </CardActions>
+            </Card>
+          </Grid>
         ))}
-      </Stack>
+      </Grid>
     </Box>
   );
 };
