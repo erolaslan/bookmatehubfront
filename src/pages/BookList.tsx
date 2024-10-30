@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
-  List,
-  ListItem,
+  Card,
+  CardContent,
+  CardActions,
   Button,
   Modal,
   IconButton,
@@ -19,7 +20,7 @@ import AddBook from "./AddBook";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs"; // Tarihi formatlamak için
+import dayjs from "dayjs";
 
 const BookList: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -58,12 +59,12 @@ const BookList: React.FC = () => {
     try {
       const response = await apiClient.get(`/Books/delete?id=${bookId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Token başlığı eklendi
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       if (response.status === 204 || response.status === 200) {
-        fetchBooks(statusFilter); // Başarılı güncelleme sonrası listeyi yeniden al
+        fetchBooks(statusFilter);
       } else {
         console.warn("Unexpected response status:", response.status);
       }
@@ -94,7 +95,7 @@ const BookList: React.FC = () => {
         </Button>
       </Stack>
       <Stack direction="row" spacing={2} alignItems="center" mb={2}>
-        <FormControl>
+        <FormControl sx={{ minWidth: 150 }}>
           <InputLabel>Status Filter</InputLabel>
           <Select
             value={statusFilter}
@@ -110,6 +111,7 @@ const BookList: React.FC = () => {
           variant="contained"
           color="primary"
           onClick={() => handleOpen()}
+          sx={{ ml: "auto" }}
         >
           Add Book
         </Button>
@@ -134,40 +136,53 @@ const BookList: React.FC = () => {
           />
         </Box>
       </Modal>
-      <List>
+      <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="start">
         {books.map((book) => (
-          <ListItem
+          <Card
             key={book.id}
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              width: 300,
+              minHeight: 200,
+              mb: 2,
+              mr: 2,
+              bgcolor: "background.paper",
+              boxShadow: 3,
+              borderRadius: 2,
+              border: "1px solid #ccc",
             }}
           >
-            <Typography>
-              {book.title} - {book.author} ({book.status})
+            <CardContent>
+              <Typography variant="h6" color="primary">
+                {book.title}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary">
+                by {book.author}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {`Status: ${book.status}`}
+              </Typography>
               {book.readingDate && (
-                <Typography variant="body2" color="textSecondary">
+                <Typography variant="body2" color="text.secondary">
                   {`Reading Date: ${dayjs(book.readingDate).format(
                     "YYYY-MM-DD"
                   )}`}
                 </Typography>
               )}
-            </Typography>
-            <Box>
+            </CardContent>
+            <CardActions>
               <IconButton onClick={() => handleOpen(book)} color="primary">
                 <EditIcon />
               </IconButton>
               <IconButton
                 onClick={() => handleDelete(book.id)}
-                color="secondary" 
+                color="secondary"
               >
                 <DeleteIcon />
               </IconButton>
-            </Box>
-          </ListItem>
+            </CardActions>
+          </Card>
         ))}
-      </List>
+      </Stack>
     </Box>
   );
 };
