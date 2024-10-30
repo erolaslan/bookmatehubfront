@@ -160,7 +160,7 @@ const BookList: React.FC = () => {
               </IconButton>
               <IconButton
                 onClick={() => handleDelete(book.id)}
-                color="secondary"
+                color="secondary" 
               >
                 <DeleteIcon />
               </IconButton>
