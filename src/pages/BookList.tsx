@@ -55,7 +55,7 @@ const BookList: React.FC = () => {
 
   const handleDelete = async (bookId: number) => {
     try {
-      const response = await apiClient.get(`/Books/${bookId}/status`, {
+      const response = await apiClient.get(`/Books/delete?id=${bookId}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem("token")}`, // Token başlığı eklendi
         },
