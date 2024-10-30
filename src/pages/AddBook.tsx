@@ -105,7 +105,6 @@ const AddBook: React.FC<AddBookProps> = ({ onBookAdded, onClose, book }) => {
         >
           <MenuItem value="Active">Active</MenuItem>
           <MenuItem value="Passive">Passive</MenuItem>
-          <MenuItem value="Deleted">Deleted</MenuItem>
         </Select>
       </FormControl> :null}
       
