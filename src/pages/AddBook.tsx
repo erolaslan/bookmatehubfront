@@ -95,6 +95,7 @@ const AddBook: React.FC<AddBookProps> = ({ onBookAdded, onClose, book }) => {
           shrink: true,
         }}
       />
+      {book ? 
       <FormControl fullWidth margin="normal">
         <InputLabel>Status</InputLabel>
         <Select
@@ -106,7 +107,8 @@ const AddBook: React.FC<AddBookProps> = ({ onBookAdded, onClose, book }) => {
           <MenuItem value="Passive">Passive</MenuItem>
           <MenuItem value="Deleted">Deleted</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> :null}
+      
       <Button
         onClick={handleSave}
         variant="contained"
